@@ -1,0 +1,245 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FILE         : lab03.tex
+% AUTHOR       : (C) Copyright 2008 by Peter C. Chapin
+% SUBJECT      : Multithreaded Application Programming.
+%
+% In this lab students will write a multithreaded application and then experiment with its
+% behavior.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% ++++++++++++++++++++++++++++++++
+% Preamble and global declarations
+% ++++++++++++++++++++++++++++++++
+\documentclass[twocolumn]{article}
+% \pagestyle{headings}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1.75ex plus0.5ex minus0.5ex}
+
+% Nice names for a few things to make future changes easier.
+\newcommand{\command}[1]{\texttt{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\filename}[1]{\texttt{#1}}
+\newcommand{\newterm}[1]{\textit{#1}}
+
+% +++++++++++++++++++
+% The document itself
+% +++++++++++++++++++
+\begin{document}
+
+% ----------------------
+% Title page information
+% ----------------------
+\title{CIS--4020 Lab \#3\\Multi-Threaded Application Programming}
+\author{\copyright\ Copyright 2008 by Peter C. Chapin}
+\date{Last Revised: September 15, 2008}
+\maketitle
+
+\section{Introduction}
+
+In this lab you will write a small but potentially useful multi-threaded file encryption
+program. You will then investigate the behavior of your program and compare it to a single
+threaded version of the same application.
+
+Your program will use the pipeline threading model. In particular, one thread will be
+responsible for reading chunks of data from an input file, another thread will encrypt or
+decrypt the chunks as appropriate, and a third thread will write the result to an output file.
+Thus the data flows from one processing stage to the next as if it was moving through a
+pipeline.
+
+It can be claimed that this design will outperform an equivalent single threaded version of the
+program even on a single processor machine. When the I/O threads are blocked waiting for the
+disk, the thread doing the encryption or decryption can continue working. One of the goals of
+this lab is to experimentally verify or deny this claim.
+
+To make your program more realistic you will use the OpenSSL cryptographic library. OpenSSL is a
+well respected library that is used by a number of serious applications. A secondary goal of
+this lab is to give you some experience using major, third-party libraries such as OpenSSL.
+
+When you complete the lab you will have learned something about multi-threaded application
+programming. You will also have a high performance file encryption program that uses a high
+quality encryption algorithm.
+
+\section{Requirements}
+
+In this lab we will use the Blowfish encryption algorithm in cipher feedback mode (CFB mode)
+with a 128~bit key. Blowfish is a block cipher that encrypts its input in units of 64~bits at a
+time. Cipher feedback mode requires an initialization vector (IV) with the same length as the
+block; for this lab use a vector consisting of all zero bits. The IV does not need to be secret.
+
+You will be working with two programs. The first program is called \filename{bfish} and is a a
+traditional, single threaded application. I will provide this program to you for your study. The
+second program is to be called \filename{bfishmt} and will be a multi-threaded version of the
+same application. You must write this program in plain C (not C++) targeting Unix
+systems\footnote{This means that you can use POSIX specific library functions in the programs.}.
+
+Both programs must have identical external behavior. They must accept a command line of the form
+
+\begin{verbatim}
+$ bfish -e|-d infile outfile "pass phrase"
+\end{verbatim}
+
+The \texttt{-e} option specifies encryption mode and the \texttt{-d} option specifies decryption
+mode. One of \texttt{-e} or \texttt{-d} must be specified but it is an error to specify both (be
+sure your program checks for this error). The given pass phrase is used as the encryption or
+decryption key. Only the first 16 characters (128 bits) are significant. If the pass phrase is
+longer than 16 characters, it is truncated. If it is shorter than 16 characters it is padded on
+the right with zero bits to an overall length of 128 bits\footnote{It would be better to compute
+a secure hash of the pass phrase to use as the key. However, don't bother with that for this
+lab.}.
+
+The two programs must be compatible with each other in the sense that each should be able to
+decrypt the other's encrypted output. Also your programs must be compatible in the same sense
+with those produced by other lab groups. I will provide binary versions of \filename{bfish} and
+\filename{bfishmt}, along with a shell script that you can use to check your programs.
+
+Use the \code{getopt} library function to process command line options. See the \code{getopt}
+manual page in section three of the manual for more information. Use the OpenSSL library for the
+encryption and decryption functions. See your class notes and the system's manual pages for more
+information. Use the POSIX thread API for creating and managing the threads in
+\filename{bfishmt}. See your class notes, the system's manual pages, and the pthread tutorial on
+my web site for more information.
+
+\section{Implementation Hints}
+
+Use the provided \filename{bfish.c} as a guide when building your program. The
+\filename{bfishmt} program should also start by analyzing the command line and opening the
+files. It should then start three worker threads: one to read from the input file, one to
+encrypt or decrypt, and one to write to the output file. The main thread should then block
+waiting for the worker threads to finish. All initialization should take place in the main
+thread before starting the workers and all cleanup, such as closing the files, should take place
+in the main thread after the workers have finished.
+
+In a classic pipeline the information being operated on is copied from each stage to the next
+usually with a buffer of some kind between the stages. In our case the data being manipulated by
+each stage is a chunk from the file. We do not want to copy those chunks any more than necessary
+since that may slow the program down to an unacceptable degree. Thus instead of passing chunks
+directly from stage to stage, I suggest that you pass pointers to the chunks instead.
+
+For example, you might define a chunk as follows
+
+\begin{verbatim}
+struct file_chunk {
+  char   buffer[4096];
+  int    count;
+}
+\end{verbatim}
+
+The member \code{buffer} contains the data from the file. The member \code{count} contains a
+count of the number of bytes in the \code{buffer} array. The reader thread should dynamically
+allocate a \code{file\_chunk} using \code{malloc} and fill it with data from the file, taking
+care to set the \code{count} member appropriately. It should then pass a pointer to the chunk to
+the encryptor/decryptor thread for processing. When the encryptor/decryptor thread is done with
+the chunk it should pass the pointer on to the writer thread for handling. When the writer
+thread has finished sending the chunk to the output file it should free the dynamically
+allocated memory. Only a pointer is passed from thread to thread. The bulk of the data in a
+chunk is not copied.
+
+To enhance performance you should use a buffer of pointers between each thread. This allows the
+sender to install multiple pointers into the buffer before the receiver has fetched even one.
+However, it is important that the buffer does not overflow or underflow, and that simultaneous
+access from multiple threads does not corrupt it. This is the classic
+\newterm{producer/consumer} problem. It is one of several famous problems in concurrent
+programming. A good, standard solution is known and you should implement it. See your class
+notes and the text for more information.
+
+One problem that arises is how to best shut down the program in an orderly way. The reader
+thread will know when it comes to the end of the input file, but it can't just abort the other
+threads at that time since there may still be unprocessed chunks outstanding. The best way to
+deal with this is for the reader to pass a special end-of-file chunk into the pipeline. When a
+thread receives this chunk it passes it on to the next stage, if appropriate, and then shuts
+itself down. If the buffers between the stages are full or partially full when the end of the
+input file is encountered, the end-of-file chunk will simply wait in the buffers behind the
+other chunks and be processed in turn. Use a chunk with a \code{count} of zero to represent the
+end of file.
+
+\section{Evaluation}
+
+Evaluating the performance of your programs is complicated by the fact that the underlying
+system extensively caches disk I/O operations. For example, the \code{write} system call usually
+returns ``quickly'' without actually waiting for the disk because the system stores the data
+written in a cache. Only when the cache is full or when the system is quiet does it bother to
+write the data to the physical disk (this might even occur after the process that wrote the data
+has already terminated). This strategy is called \newterm{lazy write} and it is used by both
+Unix and Windows. Thus for small files, it is likely that \code{write} will never block.
+
+Similarly the performance of \code{read} depends on what data is already in the cache. The first
+time you read a file will be slower than subsequent reads---unless the cache is flushed between
+reads. However, the application has no direct control over the operating system's disk cache and
+thus can't easily control when and how it is flushed.
+
+This means that the performance of your program will be non-deterministic; it may behave
+differently in an unpredictable way each time you run it. As a result, making meaningful
+performance comparisons of programs that do a lot of disk I/O is extremely difficult.
+Nevertheless it should still be possible to gather enough information about your programs to
+draw some useful conclusions. Proceed as follows:
+
+Run \filename{bfish} and \filename{bfishmt} on the same input and compare their running times.
+Try running the programs multiple times, in different orders, on different files, with different
+file sizes, and under various operating conditions. Compute the throughput of the program during
+each run in bytes/s. Under what conditions, if any, does the multi-threaded program perform
+better? In addition, monitor the CPU utilization of the host while your programs are running.
+What can you conclude?
+
+Modify \filename{bfishmt} so that each chunk gets a unique identification number starting with
+zero. Instrument the program so the worker threads print a trace message just after they have
+processed each chunk. Run the program under various conditions and interpret the output. Be
+aware that printing the trace messages will distort the program's behavior somewhat. What can
+you conclude?
+
+\textit{Optional:} Remove the trace messages and use an execution profiler on both
+\filename{bfish} and \filename{bfishmt} to gather information about where they are spending the
+most time. What can you conclude?
+
+\section{Optional Extensions}
+
+Most encryption programs have the option of compressing the plain text data before encrypting
+it. This is done to remove redundancy from the input of the encryption algorithm. The result is
+to harden the encryption and make it more difficult for an attacker to break it.
+
+Supporting compression in \filename{bfishmt} could be done by adding another pipeline stage in
+the program with a corresponding thread to handle that stage. You could use the \filename{zlib}
+compression library to implement the compression (and corresponding decompression when
+decryption mode is used). Notice that like the encryption/decryption thread, the compression
+thread would be CPU bound. It would be interesting to compare the behavior of the multi-threaded
+extended program, with compression enabled, on a single processor system and on a multiprocessor
+system.
+
+\section{Questions}
+
+\begin{enumerate}
+
+\item Why were the Unix API functions such as \code{read} and \code{write} used in this
+application instead of the C standard library functions such as \code{fread} and \code{fwrite}?
+  
+\item Why is it important to open the files in the main thread rather than, for example, opening
+the input file in the reader thread and the output file in the writer thread? There is a
+potential advantage to opening the files in the threads. What is it?
+  
+\item The OpenSSL library might not be thread safe. Does that matter? Explain.
+  
+\item The design I outlined above involves a \code{file\_\-chunk} structure being dynamically
+allocated and deallocated for each chunk read from the input file. Do you think the overhead of
+these dynamic memory operations is a problem? Can you provide concrete evidence to back up your
+answer?
+
+\item What effect does changing the file buffer size have on your program's behavior and
+performance?
+
+\item What effect does changing the size of the buffer between the threads have on your
+program's behavior and performance? In particular, consider the case when the buffer has size
+zero (threads are forced to rendezvous).
+
+\item Try out the debugger on your program. How does debugging a multi-threaded program work?
+
+\end{enumerate}
+
+\section{Report}
+
+Write a report for this lab following the lab report template on the department's web site. Be
+sure to address the questions mentioned above somewhere in your report (you don't necessarily
+need to enumerate them explicitly, however). Include a listing of your code in an appendix.
+
+You will also need to submit an electronic copy of your programs to me for testing purposes or
+demonstrate your programs to me in lab.
+
+\end{document}

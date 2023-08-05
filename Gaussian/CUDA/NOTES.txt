@@ -1,0 +1,11 @@
+
+Using the serial version of the program with type 'float' I get the following timings on node #4
+using the 2000x2000 sized problem:
+
+4.769s
+4.765s
+4.716s
+
+Average = 4.750s
+
+

@@ -1,0 +1,57 @@
+
+Various Thread Topics
+(C) Copyright 2000 by Peter Chapin
+==================================
+
+{ This is a rough outline }
+
++ Other synchronization objects
+
+   a) Mutexs
+   b) Condition variables
+   c) Counting semaphores
+   d) Read/Write locks
+   e) Spin locks.
+
++ Priority
+
+   a) Priority levels.
+   b) Dynamic priority management.
+   c) Unix "nice" values.
+   d) Priority inversion at a mutex.
+
++ Terminating threads
+
+   a) Difficulites involved with...
+
+
++ Thread-local data
+
+   a) ... as thread-safe global data.
+   b) Unix errno value.
+
++ Threads vs Processes
+
+   a) Performance (thread pools)
+   b) Resource access
+   c) Independence
+
++ Classic IPC problems
+
+   a) Producer/Consumer (pipes)
+
++ Win32 functions
+
+   a) CreateThread() or _beginthreadex()
+   b) CRITICAL_SECTION
+   c) CreateSemaphore()
+   d) Various functions for dealing with thread priorities.
+
++ When do we need to worry about all of this?
+
+   a) In the operating system itself.
+   b) In a multi-threaded program.
+   c) In a shared library.
+   d) In a program that uses shared memory.
+   e) In a program that uses shared files (to a lesser extent).
+   g) In a program that interacts with an interrupt service routine.

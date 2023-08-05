@@ -1,0 +1,43 @@
+FILE: NOTES.txt
+===============
+
+solve_system.f95
+linear_equations.f95
+
+   These two files contain a sample program from "Fortran 90 Programming" that solves a system
+   of simultaneous equations using Gaussian elimination. The performance of this program should
+   be compared to my C translation (below).
+
+   Notice that to get good performance it is necessary to exchange the array indicies in the
+   matrix of coefficients relative to the C version. Notice also that using Fortran
+   assumed-shape arrays reduced the performance of the program (with Compaq Fortran v5.5).
+
+solve_system.cpp
+linear_equations.hpp
+linear_equationsp.hpp
+Matrix.hpp
+
+   These files contain the C++ translation of the program above. The file linear_equations.hpp
+   contains the sequential solution and the file linear_equationsp.hpp contains the parallel
+   solution using a ThreadPool object to help reduce thread management overhead.
+
+linear_equations-single-threaded.c
+linear_equations-multi-threaded.c
+linear_equations-barriers.c
+
+   These three files represent parallel versions of the above program, written in C99 and using
+   POSIX thread primitives. The first file is the serial version of the program that can be used
+   as a baseline. The second file creates and joins with threads for each pass of the main loop.
+   The third file uses barriers to coordinate thread activity. In theory the barrier version
+   should have less overhead and thus be faster. In practice how true this is will depend on
+   various factors (such as the size of the system being solved).
+
+linear_equations.ads
+linear_equations.adb
+solve_system.adb
+
+   This is an Ada translation of the program using tasks for parallelism.
+
+The Fortran version of this program outperformed the C version by 5% computationally on midnight
+(466 MHz Alpha EV6 running Tru64 Unix v5.1A; Compaq C v6.4 and Compaq Fortran v5.5 both with
+full optimization options). The Fortran I/O performance was about 1/2 that of the C version.

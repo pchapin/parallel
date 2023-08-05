@@ -1,0 +1,30 @@
+#
+# Makefile for the CIS-4230 QuickSort project.
+#
+
+CC=clang
+CFLAGS=-c -O -emit-llvm -I../../../Spica/C
+LD=llvm-ld
+LDFLAGS=-native -L/usr/lib/i386-linux-gnu -lpthread
+LDLIBS=-L../../../Spica/C -lSpicaC
+SOURCES=main.c QuickSort.c
+OBJECTS=$(SOURCES:.c=.bc)
+EXECUTABLE=QuickSort
+
+%.bc:	%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(EXECUTABLE):	$(OBJECTS)
+	$(LD) $(LDFLAGS) $(OBJECTS) $(LDLIBS) -o $@
+
+# File Dependencies
+###################
+
+main.bc:	main.c QuickSort.h
+
+QuickSort.bc:	QuickSort.c QuickSort.h
+
+# Additional Rules
+##################
+clean:
+	rm -f *.o *.bc *.s *.ll *~ $(EXECUTABLE)

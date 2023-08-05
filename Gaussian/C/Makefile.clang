@@ -1,0 +1,39 @@
+#
+# Makefile for the CIS-4230 Linear Equations project.
+#
+
+CC=clang
+CFLAGS=-c -O -emit-llvm -I../../../Spica/C
+LLVMLINK=llvm-link
+LLVMLINKFLAGS=
+LINKFLAGS=-L/usr/lib/i386-linux-gnu -lpthread
+SOURCES=solve_system.c linear_equations.c linear_equations-pthreads.c
+OBJECTS=$(SOURCES:.c=.bc)
+EXECUTABLE=LinEq
+
+%.bc:	%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(EXECUTABLE):	Serial.o
+	$(CC) $< $(LINKFLAGS) -o $@
+
+Serial.o:	Serial.bc2
+	llc -filetype=obj Serial.bc2 -o Serial.o
+
+Serial.bc2:	Serial.bc1
+	opt -o Serial.bc2 -globaldce Serial.bc1
+
+Serial.bc1:	$(OBJECTS)
+	$(LLVMLINK) $(LLVMLINKFLAGS) -o $@ $(OBJECTS) ../../../Spica/C/libSpicaC.bc
+
+# File Dependencies
+###################
+
+solve_system.bc:	solve_system.c linear_equations.h
+
+linear_equations.bc:	linear_equations.c linear_equations.h
+
+# Additional Rules
+##################
+clean:
+	rm -f *.o *.bc *.s *.ll *~ $(EXECUTABLE)

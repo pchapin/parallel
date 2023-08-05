@@ -1,0 +1,129 @@
+
+LinearEquations.txt
+===================
+
+This document contains performance measurements of the Gaussian Elimination solver. This
+document focuses only on the C++ implementation.
+
+
+Machine and Program Information
+-------------------------------
+
+Processor
+
+Intel Core i7, M620 @2.67 GHz. This processor is a dual core system with hyperthreading (four
+hardware threads). See: http://ark.intel.com/Product.aspx?id=43560. The processor has a 4 MiB
+"Smart Cache." The processor also has "Turbo Boost" with a maximum turbo frequency of 3.333 GHz.
+
+Operating System
+
+Windows 7, 64 bit edition.
+
+
+Program
+
+Compiled with Microsoft Visual C++ v10 in standard "Release" mode as a 64 bit application.
+
+
+Baseline
+--------
+
+I ran the sequential program on systems of size 500x500 through 1500x1500 in steps of 100. For
+each system I first recorded the solution for later comparison with the parallel version. I
+then ran the program eight times on each system and recorded the execution time. The results are
+as follows (all times are in milliseconds). Note that to my knowledge, my operating system was
+relatively quiet during these runs.
+
+ 500x 500:   227  230  235  219  219  234  219  218
+ 600x 600:   390  390  406  390  390  390  390  390
+ 700x 700:   624  624  624  624  624  639  624  624
+ 800x 800:   921  936  921  936  936  951  936  936
+ 900x 900:  1342 1341 1342 1326 1342 1326 1326 1326
+1000x1000:  1841 1825 1825 1841 1825 1825 1825 1825
+1100x1100:  2449 2464 2450 2449 2434 2450 2434 2434
+1200x1200:  3214 3214 3198 3213 3213 3213 3198 3213
+1300x1300:  4118 4118 4087 4103 4119 4118 4103 4119
+1400x1400:  5148 5132 5148 5132 5148 5132 5164 5148
+1500x1500:  6381 6365 6364 6365 6364 6380 6365 6365
+
+Note that since I'm using type float in the matrix of coefficients, and since sizeof(float) is
+four, it follows that the 1000x1000 system has a matrix of coefficients that just barely fits
+into the cache. In fact, because of the need to manipulate the 'b' array as well, the cache is
+already starting to overflow for the 1000x1000 system.
+
+Since Gaussian Elimination is an O(n^3) algorithm I computed the cube root of the average running
+time for each system. The slope between each cube root should, in theory, be a constant.
+
+           Average  Average^(1/3) Slope
+ 500x 500:     225     6.08
+ 600x 600:     392     7.32       1.24E-02
+ 700x 700:     626     8.55       1.23E-02
+ 800x 800:     934     9.77       1.22E-02
+ 900x 900:    1334    11.01       1.24E-02
+1000x1000:    1829    12.23       1.22E-02  <-- Cache fills here.
+1100x1100:    2446    13.47       1.24E-02
+1200x1200:    3210    14.75       1.28E-02
+1300x1300:    4111    16.02       1.27E-02
+1400x1400:    5144    17.26       1.24E-02
+1500x1500:    6369    18.54       1.28E-02
+
+Notice that for system sizes that overflow the cache the constant of proportionality is slightly
+larger than for the smaller systems. It is likely this is due to cache misses during the
+computation.
+
+As an aside I noticed during these tests that my 1200x1200 matrix might be poorly conditioned.
+The solution has values of x that are between 10 and 100 times larger in absolute value than the
+initial coefficients of the system. How this impacts the timing, or even if it does, is unclear
+to me.
+
+
+Parallel Version
+----------------
+
+When constructing the parallel version I first factored out the inner two loops of the eliminate
+function into a separate function named 'row_processor'. To test that factoring I used
+row_processor to process all required rows (without creating a separate thread). This version of
+the program ran about 4% slower than the base line version.
+
+I then used a ThreadPool and executed row_processor in a separate work thread. I only used one
+thread. This version of the program ran about 9% slower than the base line version. To explore
+the benefits (if any) of using a thread pool I adjusted the program to create a new thread each
+time instead of taking a thread from the thread pool. This version of the program ran about 14%
+slower than the base line version.
+
+Using the fully parallel version I obtained the following measurements:
+
+ 500x 500: [ 139]  137   139   137   138   138   139   138
+ 600x 600: [ 234]  233   233   224   234   232   233   234
+ 700x 700:   366   364   360 [ 367]  351   365   366   360
+ 800x 800:   540   433   414   538   541 [ 542]  541   509
+ 900x 900:   552 [ 769]  701   656   610   762   566   764
+1000x1000:   787   803   977 [1021]  833   730   907   791
+1100x1100:   916   878 [1320]  965  1153  1036   935   932
+1200x1200:  1561  1272  1414  1215  1537  1229  1181 [1830]
+1300x1300:  1603  1501  1650  1714 [2340] 1541  1507  1467
+1400x1400:  1867  1884  1886  1882 [2419] 1854  1863  1866
+1500x1500:  2361  2297  2375  2270  2275 [2441] 2314  2305
+
+The variability in execution time is much greater for the parallel case than it was in the
+serial case. This might be because background processes have a greater impact on the parallel
+program. While the serial program runs the operating system can use other cores for background
+processes and thus the execution of the serial program is less disturbed. In an effort to reduce
+the impact of that effect on my results, I decided to ignore the longest running time in each
+set(shown in square brackets above) when computing the average.
+
+           Average  Average^(1/3) Slope     SpeedUp
+ 500x 500:     138     5.17                 1.63
+ 600x 600:     232     6.14       0.97E-02  1.69
+ 700x 700:     362     7.13       0.99E-02  1.73
+ 800x 800:     502     7.95       0.82E-02  1.86
+ 900x 900:     659     8.70       0.75E-02  2.02
+1000x1000:     832     9.40       0.70E-02  2.20
+1100x1100:     974     9.91       0.51E-02  2.51
+1200x1200:    1344    11.04       1.13E-02  2.39  <-- Anomalous behavior related to matrix?
+1300x1300:    1569    11.62       0.58E-02  2.62
+1400x1400:    1872    12.32       0.70E-02  2.75
+1500x1500:    2314    13.23       0.91E-02  2.75
+
+The more erratic behavior of the parallel program obscures the evidence for a O(n^3) running
+time. The variable speed-up also makes it harder to see the O(n^3) behavior of the algorithm.

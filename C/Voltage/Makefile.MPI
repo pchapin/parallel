@@ -1,0 +1,32 @@
+#
+# Makefile for the CIS-4230 Voltage project.
+#
+
+CC=mpicc
+CFLAGS=-c -fopenmp -Wall -std=c99 -D_XOPEN_SOURCE=600 -O2 -I../../../Spica/C
+LD=mpicc
+LDFLAGS=
+LDLIBS=-L../../../Spica/C -lSpicaC
+SOURCES=driver.c main-2.c shared.c
+OBJECTS=$(SOURCES:.c=.o)
+EXECUTABLE=Voltage
+
+%.o:	%.c
+	$(CC) $(CFLAGS) $< -o $@
+
+$(EXECUTABLE):	$(OBJECTS)
+	$(LD) $(LDFLAGS) $(OBJECTS) $(LDLIBS) -o $@
+
+# File Dependencies
+###################
+
+driver.o:	driver.c
+
+main-2.o:	main-2.c shared.h
+
+shared.o:	shared.c shared.h
+
+# Additional Rules
+##################
+clean:
+	rm -f *.o *.s *~ Voltage Voltage-results.txt
