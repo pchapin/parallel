@@ -1,3 +1,3 @@
 {
-    "julia.environmentPath": "/Users/peter/Projects/Parallel/Julia"
+    "julia.environmentPath": "${userHome}/.julia/environments/v1.10",
 }
