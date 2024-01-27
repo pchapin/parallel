@@ -1,5 +1,5 @@
 !===========================================================================
-! FILE          : linear_equations.f90
+! FILE          : linear_equations_slow.f90
 ! LAST REVISION : 2015-04-03
 ! SUBJECT       : Example program that solves simultaneous equations.
 !
@@ -25,7 +25,7 @@
 !      pchapin@vtc.edu
 !===========================================================================
 
-MODULE linear_equations
+MODULE linear_equations_slow
   IMPLICIT NONE
   PRIVATE
   PUBLIC :: gaussian_solve
@@ -137,4 +137,4 @@ MODULE linear_equations
       END DO
     END SUBROUTINE back_substitution
     
- END MODULE linear_equations
+ END MODULE linear_equations_slow

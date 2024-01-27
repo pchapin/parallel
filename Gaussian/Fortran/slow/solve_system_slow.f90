@@ -1,5 +1,5 @@
 !===========================================================================
-! FILE          : solve_system.f90
+! FILE          : solve_system_slow.f90
 ! LAST REVISION : 2015-04-06
 ! SUBJECT       : Example program that solves simultaneous equations.
 !
@@ -16,8 +16,8 @@
 !      pchapin@vtc.edu
 !===========================================================================
 
-PROGRAM solve_system
-  USE linear_equations
+PROGRAM solve_system_slow
+  USE linear_equations_slow
   IMPLICIT NONE
 
   ! Allocatable arrays for coefficients
@@ -63,4 +63,4 @@ PROGRAM solve_system
      PRINT *, 'Time = ', stop_time - start_time, ' seconds.'
   END IF
 
-END PROGRAM solve_system
+END PROGRAM solve_system_slow

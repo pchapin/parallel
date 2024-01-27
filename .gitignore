@@ -12,6 +12,15 @@
 *.map
 *.exp
 
+# Visual Studio
+.vs
+*.u2d
+Debug
+Release
+
+# Data Files
+*.dat
+
 # Precompiled Headers
 *.gch
 *.pch

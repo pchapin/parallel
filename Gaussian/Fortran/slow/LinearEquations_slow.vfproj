@@ -31,8 +31,8 @@
 		<Filter Name="Header Files" Filter="fi;fd"/>
 		<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
 		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
-		<File RelativePath=".\linear_equations.f90"/>
-		<File RelativePath=".\solve_system.f90"/></Filter>
+		<File RelativePath=".\linear_equations_slow.f90"/>
+		<File RelativePath=".\solve_system_slow.f90"/></Filter>
 	</Files>
 	<Globals/>
 </VisualStudioProject>
