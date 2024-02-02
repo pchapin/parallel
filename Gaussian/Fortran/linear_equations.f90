@@ -35,10 +35,10 @@ MODULE linear_equations
       ! error occured.
 
       ! Dummy arguments
-      INTEGER, INTENT(IN)                     :: n
-      REAL*8,  DIMENSION(n, n), INTENT(INOUT) :: a
-      REAL*8,  DIMENSION(n), INTENT(INOUT)    :: b
-      INTEGER, INTENT(OUT)                    :: error
+      INTEGER, INTENT(IN)                   :: n
+      REAL,  DIMENSION(n, n), INTENT(INOUT) :: a
+      REAL,  DIMENSION(n), INTENT(INOUT)    :: b
+      INTEGER, INTENT(OUT)                  :: error
 
       ! Reduce the equations by Gaussian elimination.
       CALL gaussian_elimination(a, b, n, error)
@@ -53,15 +53,15 @@ MODULE linear_equations
 
       ! Dummy arguments.
       INTEGER, INTENT(IN)                     :: n
-      REAL*8,  DIMENSION(n, n), INTENT(INOUT) :: a
-      REAL*8,  DIMENSION(n), INTENT(INOUT)    :: b
+      REAL,  DIMENSION(n, n), INTENT(INOUT) :: a
+      REAL,  DIMENSION(n), INTENT(INOUT)    :: b
       INTEGER, INTENT(OUT)                    :: error
 
       ! Local variables
-      REAL*8,  DIMENSION(n) :: temp_array
+      REAL,  DIMENSION(n) :: temp_array
       INTEGER, DIMENSION(1) :: ksave
       INTEGER               :: i, j, k
-      REAL*8                :: temp, m
+      REAL                  :: temp, m
 
       ! Validity checks.
       IF (n == 0) THEN
@@ -107,13 +107,13 @@ MODULE linear_equations
       ! reduced by Gaussian elimination.
 
       ! Dummy arguments
-      INTEGER, INTENT(IN)                  :: n
-      REAL*8,  DIMENSION(n, n), INTENT(IN) :: a
-      REAL*8,  DIMENSION(n), INTENT(INOUT) :: b
-      INTEGER, INTENT(OUT)                 :: error
+      INTEGER, INTENT(IN)                :: n
+      REAL,  DIMENSION(n, n), INTENT(IN) :: a
+      REAL,  DIMENSION(n), INTENT(INOUT) :: b
+      INTEGER, INTENT(OUT)               :: error
 
       ! Local variables
-      REAL*8  :: sum
+      REAL    :: sum
       INTEGER :: i, j
 
       error = 0

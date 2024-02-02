@@ -44,6 +44,9 @@ Release
 *.i*86
 *.x86_64
 *.hex
+Gaussian/CreateSystem/CreateSystem
+Gaussian/Fortran/slow/solve_system_slow
+Gaussian/Fortran/solve_system
 
 # Debug files
 *.dSYM/

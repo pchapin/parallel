@@ -21,8 +21,8 @@ PROGRAM solve_system
   IMPLICIT NONE
 
   ! Allocatable arrays for coefficients
-  REAL*8, ALLOCATABLE, DIMENSION(:, :) :: a
-  REAL*8, ALLOCATABLE, DIMENSION(:)    :: b
+  REAL, ALLOCATABLE, DIMENSION(:, :) :: a
+  REAL, ALLOCATABLE, DIMENSION(:)    :: b
 
   ! Size of arrays
   INTEGER :: n
