@@ -5,15 +5,7 @@
 !
 ! This program is a lightly modified version of a program that is shown as an example in
 ! "Fortran 90 Programming" by Ellis, Philips, and Lahey. Published by Addison Wesley, (C)
-! Copyright 1994, ISBN=0-201-54446-6. Section 18.5, page 647.
-!
-! Please send comments or bug reports to
-!
-!      Peter C. Chapin
-!      Computer Information Systems Department
-!      Vermont Technical College
-!      Williston, VT 05495
-!      pchapin@vtc.edu
+! Copyright 1994, ISBN=0-201-54446-6. Section 18.
 !===========================================================================
 
 PROGRAM solve_system_slow

@@ -93,7 +93,7 @@ MODULE linear_equations
             b(k) = temp
          END IF
 
-         ! Subtract multiples of column i from subsequent columns.
+         ! Subtract multiples of row i from subsequent columns.
          DO j = i + 1, n
             m = a(i, j)/a(i, i)
             a(:, j) = a(:, j) - m*a(:, i)

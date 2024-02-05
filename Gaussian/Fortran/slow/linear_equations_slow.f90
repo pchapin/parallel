@@ -15,14 +15,6 @@
 ! oriented" manner. Unfortunately this plays poorly with the memory cache since two dimensional
 ! arrays in Fortran are stored in column-major order. Thus scanning down a row entails hopping
 ! from one memory location to another distant location, causing frequent cache misses.
-!
-! Please send comments or bug reports to
-!
-!      Peter C. Chapin
-!      Computer Information Systems Department
-!      Vermont Technical College
-!      Williston, VT 05495
-!      pchapin@vtc.edu
 !===========================================================================
 
 MODULE linear_equations_slow
