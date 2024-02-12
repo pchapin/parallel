@@ -1,6 +1,6 @@
 /*! \file    sudoku.h
  *  \brief   Interface to a Sudoku board abstraction.
- *  \author  Peter C. Chapin <pchapin@vtc.edu>
+ *  \author  Peter Chapin <spicacality@kelseymountain.org>
  *
  * This is the serial version that uses only a single thread.
  */
@@ -50,27 +50,6 @@ void SudokuBoard_solve( SudokuBoard *object );
 void SudokuBoard_display( SudokuBoard *object, FILE *output );
 
 
-// Private Methods TODO: Move to the .c file.
-// ---------------
-
-//! Recursive helper function that does the solving.
-void SudokuBoard_solver( SudokuBoard *puzzle, int next_row, int next_col );
-
-//! Erases the board to an empty state.
-void SudokuBoard_erase_board( SudokuBoard *object );
-
-//! Return true if the board satisfies Sudoku rules; false otherwise.
-int SudokuBoard_valid_board( SudokuBoard *object );
-
-//! Return true if the board satisfies Sudoku rules; false otherwise.
-/*!
- *  This version only checks the row, column, and region that includes the indicated
- *  position. It can be used if the board was known to be valid before the value at the
- *  indicated position was placed.
- */
-int SudokuBoard_incremental_valid_board( SudokuBoard *object, int row, int col );
-
-
 // ===============
 // SolutionManager
 // ===============
@@ -88,6 +67,10 @@ typedef struct SolutionManager {
 
 //! Initializes a solution manager.
 void SolutionManager_construct( SolutionManager *object );
+
+//! Clean up a solution manager.
+inline void SolutionManager_destroy( SolutionManager *object )
+    {  }
 
 //! Increments the count of solutions found.
 void SolutionManager_new_solution( SolutionManager *object );

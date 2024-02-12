@@ -1,6 +1,6 @@
 /*! \file    main.c
  *  \brief   Main program of the Sudoku solver.
- *  \author  Peter C. Chapin <pchapin@vtc.edu>
+ *  \author  Peter Chapin <spicacality@kelseymountain.org>
  */
 
 #include <stdlib.h>
@@ -22,14 +22,22 @@ int main( int argc, char **argv )
         SolutionManager manager;
         SudokuBoard board;
 
+        // Initialize.
         SolutionManager_construct( &manager );
         SudokuBoard_construct( &board, &manager, 9 );
 
+        // Read the puzzle.
         SudokuBoard_load( &board, argv[1] );
         SudokuBoard_display( &board, stdout );
+
+        // Solve the puzzle.
         printf( "Solving...\n\n" );
         SudokuBoard_solve( &board );
         printf( "\n%lli solutions found.\n", SolutionManager_solution_count( &manager ) );
+
+        // Clean up.
+        SudokuBoard_destroy( &board );
+        SolutionManager_destroy( &manager );
     }
 
     return exit_status;

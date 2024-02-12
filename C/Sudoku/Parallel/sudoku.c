@@ -1,6 +1,6 @@
 /*! \file    sudoku.c
  *  \brief   Implementation of a Sudoku board abstraction.
- *  \author  Peter C. Chapin <PChapin@vtc.vsc.edu>
+ *  \author  Peter Chapin <spicacality@kelseymountain.org>
  */
 
 #include <assert.h>

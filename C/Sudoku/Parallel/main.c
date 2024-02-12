@@ -1,6 +1,6 @@
 /*! \file    main.c
  *  \brief   Main program of the Sudoku solver.
- *  \author  Peter C. Chapin <PChapin@vtc.vsc.edu>
+ *  \author  Peter Chapin <spicacality@kelseymountain.org>
  */
 
 #include <stdlib.h>

@@ -18,6 +18,9 @@
 Debug
 Release
 
+# Eclipse/CDT
+language.settings.xml
+
 # Data Files
 *.dat
 

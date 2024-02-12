@@ -1,8 +1,8 @@
 /*! \file    sudoku.h
  *  \brief   Interface to a Sudoku board abstraction.
- *  \author  Peter C. Chapin <PChapin@vtc.vsc.edu>
+ *  \author  Peter Chapin <spicacality@kelseymountain.org>
  *
- * This is the serial version that uses only a single thread.
+ * This is the parallel version.
  */
 
 #ifndef SUDOKU_H
@@ -98,7 +98,9 @@ typedef struct SolutionManager {
 //! Initializes a solution manager.
 void SolutionManager_construct( SolutionManager *object );
 
-// TODO: We need a SolutionManager destructor to clean up the mutex member.
+//! Clean up a solution manager.
+inline void SolutionManager_destroy( SolutionManager *object )
+    { pthread_mutex_destroy( &object->lock ); }
 
 //! Increments the count of solutions found.
 void SolutionManager_new_solution( SolutionManager *object );
