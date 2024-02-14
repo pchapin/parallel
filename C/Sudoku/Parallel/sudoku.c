@@ -208,6 +208,7 @@ PRIVATE void *SudokuBoard_solver( void *args )
     // dynamically allocated memory in the case where available_threads > 1 at the start of the
     // function. They are also only used in that situation and deallocated in that situation
     // (hopefully!). The warnings can be ignored.
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 
     // These variables are needed in case we want to launch additional threads.
@@ -277,7 +278,7 @@ PRIVATE void *SudokuBoard_solver( void *args )
         }
     }
 
-#pragma GCC diagnostic warning "-Wmaybe-uninitialized"
+#pragma GCC diagnostic pop
 
     // Wait for subordinate threads to finish.
     // Notice that if there were zero worker threads created, this loop does nothing.
