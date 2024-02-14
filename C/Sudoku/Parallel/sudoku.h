@@ -51,34 +51,6 @@ void SudokuBoard_solve( SudokuBoard *object );
 void SudokuBoard_display( SudokuBoard *object, FILE *output );
 
 
-// Private Methods TODO: Move to the .c file.
-// ---------------
-
-struct SolverArguments {
-    SudokuBoard *puzzle;
-    int current_row;
-    int current_col;
-    int available_threads;
-};
-
-//! Recursive helper function that does the solving. This function is called by multiple threads.
-void *SudokuBoard_solver( void *args );
-
-//! Erases the board to an empty state.
-void SudokuBoard_erase_board( SudokuBoard *object );
-
-//! Return true if the board satisfies Sudoku rules; false otherwise.
-int SudokuBoard_valid_board( SudokuBoard *object );
-
-//! Return true if the board satisfies Sudoku rules; false otherwise.
-/*!
- *  This version only checks the row, column, and region that includes the indicated
- *  position. It can be used if the board was known to be valid before the value at the
- *  indicated position was placed.
- */
-int SudokuBoard_incremental_valid_board( SudokuBoard *object, int row, int col );
-
-
 // ===============
 // SolutionManager
 // ===============
@@ -93,7 +65,6 @@ typedef struct SolutionManager {
 
 // Public Methods
 // --------------
-
 
 //! Initializes a solution manager.
 void SolutionManager_construct( SolutionManager *object );

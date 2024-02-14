@@ -188,11 +188,12 @@ PRIVATE void SudokuBoard_solver( SudokuBoard *puzzle, const int current_row, con
         puzzle->board[ current_row * puzzle->n + current_col ] = i;
         if( SudokuBoard_incremental_valid_board( puzzle, current_row, current_col ) ) {
 
-            // Did we solve it? If not, call ourselves to handle the rest of the board.
+            // Did we solve it?
             if( puzzle->filled == puzzle->n * puzzle->n ) {
                 SolutionManager_new_solution( puzzle->manager );
                 // SudokuBoard_display( puzzle, stdout );
             }
+            // Otherwise, call ourselves to handle the rest of the board.
             else {
                 next_row = current_row;
                 next_col = current_col;
