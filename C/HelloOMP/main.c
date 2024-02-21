@@ -1,7 +1,7 @@
 /*!
  *  \file   main.c
  *  \brief  OpenMP demonstration program.
- *  \author (C) Copyright 2014 by Peter C. Chapin <pchapin@vtc.edu>
+ *  \author (C) Copyright 2014 by Peter Chapin <spicacality@kelseymountain.org>
  *
  *  This program exercises various OpenMP features in a silly way. It is intended to demonstrate
  *  some of the facilities of OpenMP in an environment that actually compiles and runs. Some of
@@ -115,7 +115,6 @@ void demonstrate_reduction( )
         values[i] = (double)i;
     }
 
-    // Create a parallel region with sum shared and local_sum private.
     #pragma omp parallel for shared(values) reduction(+:sum)
     for( i = 0; i < size; ++i ) {
         sum += values[i];
