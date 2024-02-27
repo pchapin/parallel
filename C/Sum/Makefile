@@ -2,13 +2,11 @@
 # Makefile for the CIS-4230 Sum project.
 #
 
-SPICA=../../../Spica/C
 CC=gcc
-CFLAGS=-c -Wall -pthread -O2 -std=c99 -I$(SPICA)
+CFLAGS=-c -std=c99 -Wall -pthread -O3
 LD=gcc
 LDFLAGS=-pthread
-LDLIBS=-L$(SPICA) -lSpicaC
-SOURCES=sum.c
+SOURCES=sum.c Timer.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=sum
 
@@ -16,12 +14,14 @@ EXECUTABLE=sum
 	$(CC) $(CFLAGS) $< -o $@
 
 $(EXECUTABLE):	$(OBJECTS)
-	$(LD) $(LDFLAGS) $(OBJECTS) $(LDLIBS) -o $@
+	$(LD) $(LDFLAGS) $(OBJECTS) -o $@
 
 # File Dependencies
 ###################
 
-sum.o:	sum.c
+sum.o:		sum.c Timer.h environ.h
+
+Timer.o:	Timer.c environ.h
 
 # Additional Rules
 ##################

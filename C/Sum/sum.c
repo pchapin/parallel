@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#ifdef __GLIBC__
+#if defined(__GLIBC__) || defined(__CYGWIN__)
 #include <sys/sysinfo.h>
 #endif
 
@@ -19,27 +19,27 @@
 // Serial Sums
 // -----------
 
-double sum_simple( const double *array, int size )
+double sum_simple( const double *array, size_t size )
 {
     double accumulator = 0.0;
-    for( int i = 0; i < size; ++i ) {
+    for( size_t i = 0; i < size; ++i ) {
         accumulator += array[i];
     }
     return accumulator;
 }
 
-double sum_recursive( const double *array, int size )
+double sum_recursive( const double *array, size_t size )
 {
-    int midpoint = size / 2;
+    size_t midpoint = size / 2;
 
     if( size == 1 ) return array[0];
     return sum_recursive( array, midpoint ) +
            sum_recursive( array + midpoint, size - midpoint );
 }
 
-double sum_hybrid( const double *array, int size )
+double sum_hybrid( const double *array, size_t size )
 {
-    int midpoint = size / 2;
+    size_t midpoint = size / 2;
 
     if( size <= 10000 ) return sum_simple( array, size );
     return sum_hybrid( array, midpoint ) +
@@ -53,7 +53,7 @@ double sum_hybrid( const double *array, int size )
 // Structure to define the range of the array processed by a single thread.
 struct ArrayRange {
     const double *start;
-    int size;
+    size_t size;
 };
 
 
@@ -64,7 +64,7 @@ void *summer( void *arg )
     double accumulator = 0.0;
     double *result;
 
-    for (int i = 0; i < range->size; ++i) {
+    for( size_t i = 0; i < range->size; ++i ) {
         accumulator += range->start[i];
     }
 
@@ -83,7 +83,7 @@ void *summer( void *arg )
  * \param size The number of elements in the array to sum.
  * \return The sum of all the array elements. There is no checking for overflow.
  */
-double sum_parallel(const double *array, int size)
+double sum_parallel( const double *array, size_t size )
 {
     struct ArrayRange ranges[2];   // Define the subproblems (thread arguments)
     pthread_t threads[2];          // Thread handles.
@@ -92,22 +92,22 @@ double sum_parallel(const double *array, int size)
 
     // Split the problem.
     ranges[0].start = array;
-    ranges[0].size = size / 2;
+    ranges[0].size  = size / 2;
     ranges[1].start = array + size / 2;
-    ranges[1].size = size - size / 2;
+    ranges[1].size  = size - size / 2;
 
     // Start the worker threads.
-    pthread_create(&threads[0], NULL, summer, &ranges[0]);
-    pthread_create(&threads[1], NULL, summer, &ranges[1]);
+    pthread_create( &threads[0], NULL, summer, &ranges[0] );
+    pthread_create( &threads[1], NULL, summer, &ranges[1] );
 
     // Gather the results.
-    pthread_join(threads[0], &result);
-    accumulator += *(double *)result;
-    free(result);
+    pthread_join( threads[0], &result );
+    accumulator += *(double*)result;
+    free( result );
 
-    pthread_join(threads[1], &result);
-    accumulator += *(double *)result;
-    free(result);
+    pthread_join( threads[1], &result );
+    accumulator += *(double*)result;
+    free( result );
 
     // Return aggregated result.
     return accumulator;
@@ -123,13 +123,13 @@ double sum_parallel(const double *array, int size)
  * \param size The number of elements in the array to sum.
  * \return The sum of all the array elements. There is no checking for overflow.
  */
-double sum_dynamic(const double *array, int size)
+double sum_dynamic( const double *array, size_t size )
 {
-    #ifdef __GLIBC__
+    #if defined(__GLIBC__) || defined(__CYGWIN__)
     // A glibc-specific function.
     int processor_count = get_nprocs( );
     #else
-    // A POSIX threads extension (not supported by glibc, but available, e. g., on Windows.
+    // A POSIX threads extension (not supported by glibc, but available, e.g., on Windows).
     int processor_count = pthread_num_processors_np( );
     #endif
 
@@ -138,8 +138,8 @@ double sum_dynamic(const double *array, int size)
     pthread_t *threads =
         (pthread_t *)malloc( processor_count * sizeof(pthread_t) );
 
-    int     i;
-    int     chunk_size;
+    size_t  i;
+    size_t  chunk_size;
     double  accumulator = 0;
     void   *result;
 
@@ -177,7 +177,7 @@ double sum_dynamic(const double *array, int size)
 // -------
 
 // The runner function exercises either the serial or the parallel version.
-void runner( const char *tag, const double *array, int size, double ( *function )( const double *, int ) )
+void runner( const char *tag, const double *array, size_t size, double ( *function )( const double *, size_t ) )
 {
     double sum;
     Timer  stopwatch;
@@ -189,7 +189,7 @@ void runner( const char *tag, const double *array, int size, double ( *function 
         sum = function( array, size );
     }
     Timer_stop( &stopwatch );
-    seconds = (double)Timer_time( &stopwatch ) / 1000;
+    seconds = (double)Timer_time( &stopwatch ) / 1000.0;
     seconds /= ITERATIONS;
     printf( "Sum (%s) = %f (%f seconds)\n", tag, sum, seconds );
 }
@@ -200,11 +200,11 @@ int main( void )
     int rc = EXIT_SUCCESS;
     double *p = (double *)malloc( SIZE * sizeof(double) );
 
-    #ifdef __GLIBC__
+    #if defined(__GLIBC__) || defined(__CYGWIN__)
     // A glibc-specific function.
     int processor_count = get_nprocs( );
     #else
-    // A POSIX threads extension (not supported by glibc, but available, e. g., on Windows.
+    // A POSIX threads extension (not supported by glibc, but available, e.g., on Windows).
     int processor_count = pthread_num_processors_np( );
     #endif
 
@@ -216,16 +216,16 @@ int main( void )
     }
     else {
         // Fill array with known data.
-        for( int i = 0; i < SIZE; ++i ) {
+        for( size_t i = 0; i < SIZE; ++i ) {
             p[i] = 1.0;
         }
 
         // Try the various ways of summing it.
-        runner( "sim", p, SIZE, sum_simple );
-        runner( "rec", p, SIZE, sum_recursive );
-        runner( "hyb", p, SIZE, sum_hybrid );
-        runner( "par", p, SIZE, sum_parallel );
-        runner( "dyn", p, SIZE, sum_dynamic );
+        runner( "simp", p, SIZE, sum_simple );
+        runner( "recu", p, SIZE, sum_recursive );
+        runner( "hybr", p, SIZE, sum_hybrid );
+        runner( "para", p, SIZE, sum_parallel );
+        runner( "dyna", p, SIZE, sum_dynamic );
         free( p );
     }
         
