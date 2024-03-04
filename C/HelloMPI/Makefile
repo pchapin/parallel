@@ -3,7 +3,7 @@
 #
 
 CC=mpicc
-CFLAGS=-c -std=c99 -D_XOPEN_SOURCE=600 -O2 -I../../../Spica/C
+CFLAGS=-c -std=c99 -D_XOPEN_SOURCE=600 -O3
 LD=mpicc
 LDFLAGS=
 SOURCES=main.c
@@ -14,7 +14,7 @@ EXECUTABLE=main
 	$(CC) $(CFLAGS) $< -o $@
 
 $(EXECUTABLE):	$(OBJECTS)
-	$(LD) $(LDFLAGS) $(OBJECTS) -L../../../Spica/C -lSpicaC -lm -o $@
+	$(LD) $(LDFLAGS) $(OBJECTS) -lm -o $@
 
 # File Dependencies
 ###################

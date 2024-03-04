@@ -1,7 +1,7 @@
 /*!
  * \file    HelloMPI.c
  * \brief   Sample MPI program that sends and receives some basic messages.
- * \author  Peter C. Chapin <pchapin@vtc.edu>
+ * \author  Peter Chapin <peter.chapin@vermontstate.edu>
  */
 
 #include <stdio.h>
@@ -26,7 +26,7 @@ int main( int argc, char **argv )
     MPI_Comm_rank( MPI_COMM_WORLD, &my_rank );
 
     if( my_rank == 0 ) {
-        // I'm the master...
+        // I'm the main node...
         for( source = 1; source < number_of_processes; ++source ) {
             tag_value = 42;
             MPI_Recv( buffer, BUFFER_SIZE, MPI_CHAR, source, tag_value, MPI_COMM_WORLD, &status );
