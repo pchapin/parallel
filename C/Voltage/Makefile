@@ -7,7 +7,7 @@ CFLAGS=-c -Wall -pthread -std=c99 -D_XOPEN_SOURCE=600 -O2
 LD=gcc
 LDFLAGS=-pthread
 LDLIBS=
-SOURCES=driver.c main-0.c main-1.c shared.c
+SOURCES=driver.c main-0.c main-1.c shared.c Timer.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=Voltage
 
@@ -22,11 +22,13 @@ $(EXECUTABLE):	$(OBJECTS)
 
 driver.o:	driver.c
 
-main-0.o:	main-0.c shared.h
+main-0.o:	main-0.c shared.h Timer.h
 
-main-1.o:	main-1.c shared.h
+main-1.o:	main-1.c shared.h Timer.h
 
-shared.o:	shared.c shared.h
+shared.o:	shared.c shared.h Timer.h
+
+Timer.o:	Timer.c Timer.h
 
 # Additional Rules
 ##################

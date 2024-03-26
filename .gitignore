@@ -50,6 +50,8 @@ language.settings.xml
 Gaussian/CreateSystem/CreateSystem
 Gaussian/Fortran/slow/solve_system_slow
 Gaussian/Fortran/solve_system
+C/Voltage/Voltage
+C/Voltage/Voltage-results.txt
 
 # Debug files
 *.dSYM/
