@@ -1,6 +1,6 @@
-/*
- * \file main-0.c
- * \brief A serial solution to the voltage field problem described in CIS-4230, Homework #2.
+/*! \file    shared.h
+ *  \brief   A serial solution to the voltage field problem.
+ *  \author  Peter Chapin <spicacality@kelseymountain.org>
  *
  * This program uses a single thread to compute the voltage field inside a square region of
  * space bounded by several "plates" at different voltages. It thus solves the problem described

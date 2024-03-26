@@ -1,8 +1,6 @@
-/*
- * \file shared.c
- *
- * \brief Implementation of various helper functions that are shared between the program
- * variants.
+/*! \file    shared.c
+ *  \brief   Implementation of helper functions that are shared between the program variants.
+ *  \author  Peter Chapin <spicacality@kelseymountain.org>
  */
 
 #include <stdio.h>

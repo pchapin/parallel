@@ -1,6 +1,6 @@
-/*
- * \file shared.h
- * \brief Declarations of helper functions that are shared between the program variants.
+/*! \file    shared.h
+ *  \brief   Declarations of helper functions that are shared between the program variants.
+ *  \author  Peter Chapin <spicacality@kelseymountain.org>
  */
 
 #ifndef SHARED_H

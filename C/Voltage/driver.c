@@ -1,6 +1,6 @@
-/*
- * \file driver.c
- * \brief A simple program to call the appropriate main.
+/*! \file    driver.c
+ *  \brief   A simple program to call the appropriate main.
+ *  \author  Peter Chapin <spicacality@kelseymountain.org>
  */
 
 extern int main_0( void );  // The serial version.

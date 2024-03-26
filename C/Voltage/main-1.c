@@ -1,16 +1,13 @@
-/*
- * \file main-1.c
- * \brief A solution to CIS-4230, Homework #2.
- *
- * This program uses multiple threads to solve the Homework #2 problem. It does not consider
- * localization of data access.
+/*! \file    main-1.c
+ *  \brief   A multi-threaded version of the voltage field solver.
+ *  \author  Peter Chapin <spicacality@kelseymountain.org>
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <pthread.h>
-#ifdef __GLIBC__
+#if defined(__GLIBC__) || defined(__CYGWIN__)
 #include <sys/sysinfo.h>
 #endif
 #include "Timer.h"
@@ -64,7 +61,7 @@ int main_1( void )
     initialize_workspace( );
 
     // Figure out how many threads to use.
-    #ifdef __GLIBC__
+    #if defined(__GLIBC__) || defined(__CYGWIN__)
     int processor_count = get_nprocs( );
     #else
     int processor_count = pthread_num_processors_np( );
