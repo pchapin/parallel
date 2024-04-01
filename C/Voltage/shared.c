@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include "shared.h"
 
-// We assume this array is at least 64 bit aligned. Furthermore we assume that reads and writes
-// from 64 bit, aligned data (such as type double) is atomic. These assumptions should be
+// We assume this array is at least 64 bit aligned. Furthermore, we assume that reads and writes
+// from 64-bit, aligned data (such as type double) is atomic. These assumptions should be
 // verified by consulting the Intel architecture documentation and the compiler documentation.
 //
 // TODO: Include appropriate citations/documentation here to justify assumptions above!

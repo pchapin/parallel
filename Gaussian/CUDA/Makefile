@@ -4,15 +4,17 @@
 
 CC=gcc
 NVCC=nvcc
-CFLAGS=-c -std=c99 -D_XOPEN_SOURCE=600 -O2 -I../../../Spica/C
-NVCFLAGS=-c -m64 -arch=sm_13 -D_XOPEN_SOURCE=600 -O2 -I../../../Spica/C
+CFLAGS=-c -std=c99 -D_XOPEN_SOURCE=600 -O2
+NVCFLAGS=-c -m64 --gpu-architecture=compute_50 -D_XOPEN_SOURCE=600 -O2
 LD=nvcc
-LDFLAGS=-m64 -arch=sm_13
+LDFLAGS=-m64 --gpu-architecture=compute_50
 SOURCES=solve_system.c \
-        linear_equations.cu
+        gaussian.cu    \
+	Timer.c
 OBJECTS=solve_system.o \
-	linear_equations.o
-EXECUTABLE=LinEq
+	gaussian.o     \
+	Timer.o
+EXECUTABLE=GaussianCUDA
 
 %.o:	%.c
 	$(CC) $(CFLAGS) $< -o $@
@@ -21,14 +23,16 @@ EXECUTABLE=LinEq
 	$(NVCC) $(NVCFLAGS) $< -o $@
 
 $(EXECUTABLE):	$(OBJECTS)
-	$(LD) $(LDFLAGS) $(OBJECTS) -L../../../Spica/C -lSpicaC -o $@
+	$(LD) $(LDFLAGS) $(OBJECTS) -o $@
 
 # File Dependencies
 ###################
 
-solve_system.o:	solve_system.c linear_equations.h
+solve_system.o:	solve_system.c gaussian.h
 
-linear_equations.o:	linear_equations.cu linear_equations.h
+gaussian.o:	gaussian.cu gaussian.h
+
+Timer.o:	Timer.c Timer.h
 
 # Additional Rules
 ##################

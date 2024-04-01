@@ -71,8 +71,8 @@ int main_1( void )
     pthread_barrier_init( &pass_barrier, NULL, processor_count + 1 );
     pthread_barrier_init( &evaluation_barrier, NULL, processor_count + 1 );
 
-    // Split problem into subproblems (let each thread work on a subset of the rows?)
-    struct WorkUnit *work_units = ( struct WorkUnit * )malloc( processor_count * sizeof( struct WorkUnit ) );
+    // Split problem into subproblems (let each thread work on a subset of the rows)
+    struct WorkUnit *work_units = (struct WorkUnit *)malloc( processor_count * sizeof(struct WorkUnit) );
     int rows_per_processor = ( SIZE - 2 ) / processor_count;
     for( int i = 0; i < processor_count; ++i ) {
         work_units[i].start_row = 1 + i*rows_per_processor;
@@ -85,7 +85,7 @@ int main_1( void )
     }
 
     // Start the threads.
-    pthread_t *thread_IDs = (pthread_t *)malloc( processor_count * sizeof( pthread_t ) );
+    pthread_t *thread_IDs = (pthread_t *)malloc( processor_count * sizeof(pthread_t) );
     Timer stopwatch;
     Timer_initialize( &stopwatch );
     Timer_start( &stopwatch );

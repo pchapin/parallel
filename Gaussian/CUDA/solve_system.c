@@ -1,14 +1,14 @@
 /*!
-    \file   solve_system.c
-    \brief  Solve a large system of simultaneous equations.
-    \author (C) Copyright 2015 by Peter C. Chapin <PChapin@vtc.vsc.edu>
-*/
+ *  \file   solve_system.c
+ *  \brief  Solve a large system of simultaneous equations.
+ *  \author (C) Copyright 2015 by Peter Chapin <spicacality@kelseymountain.org>
+ */
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <Timer.h>
 
-#include "linear_equations.h"
+#include "Timer.h"
+#include "gaussian.h"
 
 int main( int argc, char *argv[] )
 {
