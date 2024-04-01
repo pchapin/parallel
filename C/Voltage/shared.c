@@ -15,6 +15,7 @@
 double workspace[SIZE][SIZE];
 
 
+// TODO: Read configuration from a file.
 void initialize_workspace( void )
 {
     // Top row initialized to 1.0 volts.
@@ -46,6 +47,7 @@ void initialize_workspace( void )
 }
 
 
+// TODO: Write a visualization program that reads this output file.
 void save_workspace( void )
 {
     FILE *output_file;

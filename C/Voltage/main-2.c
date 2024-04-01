@@ -1,6 +1,8 @@
 /*! \file    main-2.c
  *  \brief   An MPI version of the voltage field solver.
  *  \author  Peter Chapin <spicacality@kelseymountain.org>
+ *
+ * Currently this program is a copy of the version using pthreads and barriers directly.
  */
 
 #include <stdio.h>

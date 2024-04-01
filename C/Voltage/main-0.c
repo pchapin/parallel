@@ -1,11 +1,10 @@
-/*! \file    shared.h
+/*! \file    main-0.c
  *  \brief   A serial solution to the voltage field problem.
  *  \author  Peter Chapin <spicacality@kelseymountain.org>
  *
  * This program uses a single thread to compute the voltage field inside a square region of
- * space bounded by several "plates" at different voltages. It thus solves the problem described
- * in CIS-4230, Homework #2 except that it is not multi-threaded. As such it can serve as a
- * baseline against which the multi-threaded versions can be compared.
+ * space bounded by several "plates" at different voltages. Since this program is not
+ * multithreaded, it can serve as a baseline against which the other versions can be compared.
  */
 
 #include <stdio.h>
@@ -15,7 +14,7 @@
 #include "Timer.h"
 #include "shared.h"
 
-int main_0( void )
+int main_0( int argc, char *argv )
 {
     int    rc = EXIT_SUCCESS;
     int    iteration_count = 0;

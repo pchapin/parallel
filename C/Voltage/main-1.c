@@ -1,5 +1,5 @@
 /*! \file    main-1.c
- *  \brief   A multi-threaded version of the voltage field solver.
+ *  \brief   A multithreaded version of the voltage field solver.
  *  \author  Peter Chapin <spicacality@kelseymountain.org>
  */
 
