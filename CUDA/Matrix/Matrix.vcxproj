@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{94960BDA-D4A0-4DEB-AB07-DF7A13DB0EC2}</ProjectGuid>
-    <RootNamespace>Query</RootNamespace>
+    <ProjectGuid>{623FE7EF-1A1F-4BC6-BBE7-7CF60D685CF7}</ProjectGuid>
+    <RootNamespace>Matrix</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -77,7 +77,7 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="query.cu" />
+    <CudaCompile Include="matrix.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

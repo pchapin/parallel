@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{94960BDA-D4A0-4DEB-AB07-DF7A13DB0EC2}</ProjectGuid>
-    <RootNamespace>Query</RootNamespace>
+    <ProjectGuid>{808DD447-3CB5-4113-A009-56FBE2C05F51}</ProjectGuid>
+    <RootNamespace>Hello</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -77,7 +77,7 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="query.cu" />
+    <CudaCompile Include="hello.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
