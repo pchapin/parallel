@@ -1,0 +1,11 @@
+
+# This assumes the NVIDIA GPU Computing Toolkit is installed. The installer normally sets the
+# CUDA_PATH environment variable automatically. To build the program, open a "x64 Native Tools
+# Command Prompt" as provided by Visual Studio, and then run `nmake` on this file.
+
+VectorAdd.exe:  VectorAdd.c
+	cl "/I%CUDA_PATH%\include" VectorAdd.c /link "/LIBPATH:%CUDA_PATH%\lib\x64" OpenCL.lib
+
+clean:
+	del VectorAdd.obj
+	del VectorAdd.exe
