@@ -316,8 +316,6 @@ int main( int argc, char **argv )
     }
 
     const int     elements       = 2048;  // Elements in each array.
-          cl_uint platform_count = 0;     // How many OpenCL platforms are avaiable?
-          cl_uint device_count   = 0;     // How many devices on the selected platform?
           cl_int  status;                 // Use this to check the output of each API call.
           int     return_code    = EXIT_SUCCESS;
 
